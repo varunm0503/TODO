@@ -1,0 +1,33 @@
+$primary-color: #ccc;
+$secondary-color: #f1f1f1;
+$hover-color: #ddd;
+
+
+/* Sets the default setting for ul */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.notesArea{
+    display:flex;
+}
+
+.note {
+    padding: 10px;
+    background: $primary-color;
+    display: flex;
+
+    &:nth-child(odd) { background: $secondary-color; }
+
+    &.note_displayNone{
+        display: none;
+    }
+}
+
+.tab__btn{
+    width:25% !important;
+}
+
+/* & */

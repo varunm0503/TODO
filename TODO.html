@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<!-- <link rel="stylesheet" href="todo.css"> -->
+		<link rel="stylesheet" href="todoFromScss3.css"> 
+		<link rel="stylesheet" href="./bootstrap/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+	</head>
+	<body>
+		<div id = "TODO" class="toDo">
+			<div class="container-fluid">
+				<div class="form-group">
+					<input type = "text" placeholder="Enter note" class="toDo__input form-control" />
+				</div>
+				<div class="tab btn-group btn-group-justified">
+					<button class = "tab__btn btn btn-primary active">All</button>
+					<button class = "tab__btn btn btn-primary">Archive</button>
+					<button class = "tab__btn btn btn-primary">Pending</button>
+					<button class = "tab__btn btn btn-primary">Done</button>
+				</div>
+				<ul id="notesArea">
+				</ul>
+			</div>
+		</div>
+		<script src="toDo3.js"></script>
+	</body>
+</html>

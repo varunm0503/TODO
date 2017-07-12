@@ -1,0 +1,24 @@
+/* Sets the default setting for ul */
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0; }
+
+.notesArea {
+  display: flex; }
+
+.note {
+  padding: 10px;
+  background: #ccc;
+  display: flex; }
+  .note:nth-child(odd) {
+    background: #f1f1f1; }
+  .note.note_displayNone {
+    display: none; }
+
+.tab__btn {
+  width: 25% !important; }
+
+/* & */
+
+/*# sourceMappingURL=toDoFromScss3.css.map */
