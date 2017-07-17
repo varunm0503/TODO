@@ -1,4 +1,3 @@
-//change
 const types = {
 	ALL: 'All',
 	ARCHIVE: 'Archive',
@@ -16,14 +15,49 @@ var model = {
 
 	types : [types.ARCHIVE,types.PENDING,types.DONE],
 
-	addNote : function(note){
+	init : function(){
+		this.currentType = types.ALL;
+		this.count = 0;
+	},
+
+	addNote : function(noteText){
+		this.count++;
+
+		let note  = {
+			id: this.count,
+			text : noteText,
+			type : types.PENDING
+		}
 		this.toDoNotes.push(note);
+		return note;
 	},
 
 	changeNoteType : function(noteId,newType){
 		let intNoteId = parseInt(noteId);
-		let note = this.toDoNotes.filter( n => n.id === intNoteId)[0];
+		let note = this.toDoNotes.find( n => n.id === intNoteId);
+		//let note = this.toDoNotes.filter( n => n.id === intNoteId)[0];
 		note.type = newType;
+	},
+
+	getNotes : function(type){
+		const allNotes = this.toDoNotes;
+		return type === types.ALL ? allNotes : allNotes.filter(note => note.type === type); 
+	},
+
+	getTypes : function(){
+		return this.types;
+	},
+
+	getType : function(i){
+		return this.types[i];
+	},
+
+	getCurrentType : function(){
+		return this.currentType;
+	},
+
+	setCurrentType : function(type){
+		model.currentType = type;
 	}
 
 };
@@ -32,42 +66,32 @@ var octopus = {
 	
 	init: function(){
 		view.init();
-		model.currentType = types.ALL;
-		model.count = 0;
+		model.init();
 	},
 
 	saveNoteAsPending : function(noteText){
-		model.count++;
-
-		let note  = {
-			id: model.count,
-			text : noteText,
-			type : types.PENDING
-		}
-
-		model.addNote(note);
+		let note = model.addNote(noteText);
 		view.createNewNoteNode(note);
 	},
 
 	getNotes : function(type){
-		const allNotes = model.toDoNotes;
-		return type === types.ALL ? allNotes : allNotes.filter(note => note.type === type); 
+		return model.getNotes(type);
 	},
 
 	getTypes : function(){
-		return model.types;
+		return model.getTypes();
 	},
 
 	getType : function(i){
-		return model.types[i];
+		return model.getType(i);
 	},
 
 	changeType : function(type){
-		model.currentType = type;
+		model.setCurrentType(type);
 	},
 
 	getCurrentType : function(){
-		return model.currentType;
+		return model.getCurrentType();
 	},
 
 	changeNoteType : function(noteId, newType){
@@ -83,30 +107,8 @@ var octopus = {
 		}
 		str+="]"
 		return str;
-	},
-
-	createNoteNode: function(note){
-		const allTypes = octopus.getTypes();
-		const newNode = document.createElement('li');
-		newNode.setAttribute("class","note");
-		newNode.setAttribute("data-type",note.id);
-		newNode.innerHTML = `<span class ="col-xs-8">${note.text}</span>
-							<span class="options col-xs-4 btn-group">
-							<button class="options__button btn btn-primary" data-type=${types.ARCHIVE}>Archive</button>
-							<button class="options__button btn btn-primary" data-type=${types.PENDING}>Pending</button>
-							<button class="options__button btn btn-primary" data-type=${types.DONE}>Done</button>
-							</span>`;
-		const options = newNode.querySelectorAll('.options__button');
-		for (let j = 0;j< allTypes.length;j++){
- 			if (allTypes[j] === note.type){
- 				options[j].classList.add('disabled');
- 			}
- 		}
- 		if(!(octopus.getCurrentType() === "All" || octopus.getCurrentType() === note.type)){
- 			newNode.classList.add("note_displayNone");
- 		} 
- 		return newNode;
 	}
+
 };
 
 var view = {
@@ -167,7 +169,30 @@ var view = {
 
 	createNewNoteNode : function(note){
 		const notesArea = document.getElementById("notesArea");
- 		notesArea.appendChild(octopus.createNoteNode(note));
+ 		notesArea.appendChild(this.createNoteNode(note));
+	},
+
+	createNoteNode: function(note){
+		const allTypes = octopus.getTypes();
+		const newNode = document.createElement('li');
+		newNode.setAttribute("class","note");
+		newNode.setAttribute("data-type",note.id);
+		newNode.innerHTML = `<span class ="col-xs-8">${note.text}</span>
+							<span class="options col-xs-4 btn-group">
+							<button class="options__button btn btn-primary" data-type=${types.ARCHIVE}>Archive</button>
+							<button class="options__button btn btn-primary" data-type=${types.PENDING}>Pending</button>
+							<button class="options__button btn btn-primary" data-type=${types.DONE}>Done</button>
+							</span>`;
+		const options = newNode.querySelectorAll('.options__button');
+		for (let j = 0;j< allTypes.length;j++){
+ 			if (allTypes[j] === note.type){
+ 				options[j].classList.add('disabled');
+ 			}
+ 		}
+ 		if(!(octopus.getCurrentType() === "All" || octopus.getCurrentType() === note.type)){
+ 			newNode.classList.add("note_displayNone");
+ 		} 
+ 		return newNode;
 	},
 
 	render: function(){
@@ -188,8 +213,7 @@ var view = {
 		notesArea.innerHTML = "";
 		const filteredNotes = octopus.getNotes(type);
 		for(let j=0;j<filteredNotes.length;j++){
-			const newNode = octopus.createNoteNode(filteredNotes[j]);
-			notesArea.appendChild(newNode);
+			this.createNewNoteNode(filteredNotes[j]);
 		}
 
 	}
